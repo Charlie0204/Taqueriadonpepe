@@ -9,11 +9,12 @@ with open("ordenes.json", 'w') as f:
     f.close()
 with open("ordenes.json", "r") as f:
     while True:
-        line = f.readline
+        line = f.readline()
         if line != '':
             strings.append(line[:-1])
+            jsonorden = json.loads(data)
         else:
             break
     f.close()
 
-jsonorden = json.loads(data) #para leer en diccionario el json
+ #para leer en diccionario el json

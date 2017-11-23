@@ -17,4 +17,6 @@ with open("ordenes.json", "r") as f:
             break
     f.close()
 
+
+
  #para leer en diccionario el json

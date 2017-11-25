@@ -1,22 +1,30 @@
 from SQSf import *
 import time
 import queue
+from threading import Thread,Lock
 
-
+listaWrite = []
 ingredientes = {"Cilantro":500, "Cebolla":500, "Salsa": 500, "Queso":500, "Guacamole":500}
+tortillas1 = 500
+tortillas2 = 500
+tortillas3 = 500
 order = SqsRead()
 
 Q1T1 = queue.Queue()
 Q2T1 = queue.Queue()
 Q3T1 = queue.Queue()
+ListT1 = [Q1T1,Q2T1,Q3T1]
 
 Q1T2 = queue.Queue()
 Q2T2 = queue.Queue()
 Q3T2 = queue.Queue()
+ListT2 = [Q1T2,Q2T2,Q3T2]
 
 Q1T3 = queue.Queue()
 Q2T3 = queue.Queue()
 Q3T3 = queue.Queue()
+ListT3 = [Q1T3,Q2T3,Q3T3]
+
 
 def Acomodar(MainQueue):
     count1 = 1
@@ -61,13 +69,48 @@ def Acomodar(MainQueue):
                         count3 += 1
 
 
+def startProgram():
+    threads_taquero = []
+
 def Taquero1(Q1T1,Q2T1,Q3T1):
     while True:
-        restaIngredientes(order)
+        for i in range(5):
+            procesaOrden(Q1T1)
+            tortillas1 -= 1
+        for i in range(3):
+            procesaOrden(Q2T1)
+            tortillas1 -= 1
+        procesaOrden(Q3T1)
+        tortillas1 -= 1
 
+def Taquero2(Q1T2,Q2T2,Q3T2):
+    while True:
+        for i in range(5):
+            procesaOrden(Q1T2)
+            tortillas2 -= 1
+        for i in range(3):
+            procesaOrden(Q2T2)
+            tortillas2 -= 1
+        procesaOrden(Q3T2)
+        tortillas2 -= 1
+
+def Taquero3(Q1T3,Q2T3,Q3T3):
+    while True:
+        for i in range(5):
+            procesaOrden(Q1T3)
+            tortillas2 -= 1
+        for i in range(3):
+            procesaOrden(Q2T3)
+            tortillas2 -= 1
+        procesaOrden(Q3T3)
+        tortillas2 -= 1
 
 def procesaOrden(QT):
-    print("Procesando orden")
+    actual = QT.get()
+    print("Procesando orden: " + actual["process_id"])
+    restaIngredientes(actual)
+    time.sleep(.2)
+
 
 
 def restaIngredientes(orderI):

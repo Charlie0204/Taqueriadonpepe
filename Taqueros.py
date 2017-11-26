@@ -39,45 +39,64 @@ def Acomodar(MainQueue):
         if(len(MainQueue) > 0):
             actual = MainQueue.pop(0)
             for suborden in actual["orden"]:
-                suborden["datetime"] = datetime.datetime.now()
+                suborden["inicioAcomoda"] = datetime.datetime.now()
                 if suborden["quantity"] < 10:
                     count1 %= 3
                     if count1 == 0:
                         Q1T1.put(suborden)
                         count1 += 1
+                        time.sleep(.05)
+                        suborden["finAcomoda"] = datetime.datetime.now()
                     elif count1 == 1:
                         Q1T2.put(suborden)
                         count1 += 1
+                        time.sleep(.05)
+                        suborden["finAcomoda"] = datetime.datetime.now()
                     elif count1 == 2:
                         Q1T3.put(suborden)
                         count1 += 1
+                        time.sleep(.05)
+                        suborden["finAcomoda"] = datetime.datetime.now()
                 elif 10 < suborden["quantity"] < 20:
                     count2 %= 3
                     if count2 == 0:
                         Q2T1.put(suborden)
                         count2 += 1
+                        time.sleep(.05)
+                        suborden["finAcomoda"] = datetime.datetime.now()
                     elif count2 == 1:
                         Q2T2.put(suborden)
                         count2 += 1
+                        time.sleep(.05)
+                        suborden["finAcomoda"] = datetime.datetime.now()
                     elif count2 == 2:
                         Q2T3.put(suborden)
                         count2 += 1
+                        time.sleep(.05)
+                        suborden["finAcomoda"] = datetime.datetime.now()
                 elif suborden["quantity"] > 20:
                     count3 %= 3
                     if count3 == 0:
                         Q3T1.put(suborden)
                         count3 += 1
+                        time.sleep(.05)
+                        suborden["finAcomoda"] = datetime.datetime.now()
                     elif count3 == 1:
                         Q3T2.put(suborden)
                         count3 += 1
+                        time.sleep(.05)
+                        suborden["finAcomoda"] = datetime.datetime.now()
                     elif count3 == 2:
                         Q3T3.put(suborden)
                         count3 += 1
+                        time.sleep(.05)
+                        suborden["finAcomoda"] = datetime.datetime.now()
 
 #TAQUEROS: PROCESS 5 SMALL ORDERS, 3 MEDIUM ORDERS, 1 LARGE ORDER
 def Taquero1(Q1T1,Q2T1,Q3T1):
-    global tortillas1
-    if(tortillas > 0):
+    # global tortillas1
+    tortillas1 = 500
+    if(tortillas1 > 0):
         while True:
             #print("Taquero1")
             if Q1T1.qsize() >= 5:
@@ -95,7 +114,8 @@ def Taquero1(Q1T1,Q2T1,Q3T1):
         thread.sleep(5)
 
 def Taquero2(Q1T2,Q2T2,Q3T2):
-    global tortillas2
+    # global tortillas2
+    tortillas2 = 500
     if(tortillas2 > 0):
         while True:
             if Q1T2.qsize() >= 5:
@@ -113,8 +133,9 @@ def Taquero2(Q1T2,Q2T2,Q3T2):
         thread.sleep(5)
 
 def Taquero3(Q1T3,Q2T3,Q3T3):
-    global tortillas3
-    if(tortillas2 > 0):
+    # global tortillas3
+    tortillas3 = 500
+    if(tortillas3 > 0):
         while True:
             if Q1T3.qsize() >= 5:
                 for i in range(5):
@@ -132,14 +153,15 @@ def Taquero3(Q1T3,Q2T3,Q3T3):
 
 #GRABS ORDER FROM QUEUE, DECREASES INGREDIENTS, WAITS FOR TACOS TO BE READY, CALCULATES PROCESS DURATION
 def procesaOrden(QT):
-    start = t()
     actual = QT.get()
+    actual["inicioProcesa"] = datetime.datetime.now()
     print("Procesando orden: " + actual["part_id"])
     restaIngredientes(actual)
     temtime = actual["quantity"] * .05
     time.sleep(temtime)
-    end = t()
-    tiempo = (end - start)
+    actual["finProcesa"]= datetime.datetime.now()
+    print(preparaRespuesta(actual))
+
 
 
 def checkIngredients(ingredientes):
@@ -175,40 +197,81 @@ def rellenaIngredientes(ingredientes):
         if (ingredientes["Frijoles"] <= 150):
             ingredientes["Frijoles"] += 100
 
-def Tortillera1():
-    global tortillas1
-    if tortillas1 <= 150:
-        time.sleep(5)
-        tortillas1 += 50
-        Tortillera1()
-    elif tortillas1 >= 150:
-        time.sleep(1)
-        tortillas1 += 1
-        Tortillera1()
+# def Tortillera1(tortillas1):
+#     if tortillas1 <= 150:
+#         time.sleep(5)
+#         tortillas1 += 50
+#         Tortillera1()
+#     elif tortillas1 >= 150:
+#         time.sleep(1)
+#         tortillas1 += 1
+#         Tortillera1(tortillas1)
+#
+# def Tortillera2(tortillas2):
+#     if tortillas2 <= 150:
+#         time.sleep(5)
+#         tortillas2 += 50
+#         Tortillera2()
+#     elif tortillas2 >= 150:
+#         time.sleep(1)
+#         tortillas2 += 1
+#         print(tortillas2)
+#         Tortillera2(tortillas2)
+#
+# def Tortillera3(tortillas3):
+#     if tortillas3 <= 150:
+#         time.sleep(5)
+#         tortillas3 += 50
+#         Tortillera3()
+#     elif tortillas3 >= 150:
+#         time.sleep(1)
+#         tortillas3 += 1
+#         Tortillera3(tortillas3)
 
-def Tortillera2():
-    global tortillas2
-    if tortillas2 <= 150:
-        time.sleep(5)
-        tortillas2 += 50
-        print(tortillas2)
-        Tortillera2()
-    elif tortillas2 >= 150:
-        time.sleep(1)
-        tortillas2 += 1
-        print(tortillas2)
-        Tortillera2()
+def preparaRespuesta(order):
+    respuesta = []
+    respuesta.append(order["inicioAcomoda"])
+    respuesta.append(order["finAcomoda"])
+    respuesta.append(order["inicioProcesa"])
+    respuesta.append(order["finProcesa"])
 
-def Tortillera3():
-    global tortillas3
-    if tortillas3 <= 150:
-        time.sleep(5)
-        tortillas3 += 50
-        Tortillera3()
-    elif tortillas3 >= 150:
-        time.sleep(1)
-        tortillas3 += 1
-        Tortillera3()
+    respuestaF = [
+        {
+        "datetime": respuesta[0],
+        "request_id": "",
+        "orden": [
+            {"part_id": order["part_id"],
+            "type":order["type"],
+            "meat":order["meat"],
+            "quantity":order["quantity"],
+            "ingredients":order["ingredients"]
+         }
+        ],
+        "answer":{
+            "start_time": respuesta[0],
+            "end_date": respuesta[3],
+            "steps":[
+                {
+                    "step": 1,
+                    "state": "Acomodando",
+                    "action": "Sorting",
+                    "part_id": order["part_id"],
+                    "startTime": respuesta[0],
+                    "endTime": respuesta[1]
+                },
+                {
+                    "step": 2,
+                    "state": "ProcesandoOrder",
+                    "action": "Working",
+                    "part_id": order["part_id"],
+                    "startTime": respuesta[2],
+                    "endTime": respuesta[3]
+                }
+            ]
+        }
+        }
+        ]
+    return respuestaF
 
 
 #START THE PROGRAM
@@ -225,12 +288,12 @@ def startProgram():
     threadAcomodar.start()
     threadRellena = Thread(target=rellenaIngredientes,args=[ingredientes])
     threadRellena.start()
-    threadTortillera1 = Thread(target=Tortillera1, args=[tortillas1])
-    threadTortillera1.start()
-    threadTortillera2 = Thread(target=Tortillera2, args=[tortillas2])
-    threadTortillera2.start()
-    threadTortillera3 = Thread(target=Tortillera3, args=[tortillas3])
-    threadTortillera3.start()
+    # threadTortillera1 = Thread(target=Tortillera1, args=[tortillas1])
+    # threadTortillera1.start()
+    # threadTortillera2 = Thread(target=Tortillera2, args=[tortillas2])
+    # threadTortillera2.start()
+    # threadTortillera3 = Thread(target=Tortillera3, args=[tortillas3])
+    # threadTortillera3.start()
     threadIngredientes = Thread(target=checkIngredients, args=[ingredientes])
     threadIngredientes.start()
 
@@ -238,6 +301,8 @@ def startProgram():
         ordenes.extend(SqsRead())
         #Acomodar(ordenes)
         print(ingredientes)
+
+
 
 
 

@@ -8,7 +8,11 @@ from threading import Thread,Lock
 listaWrite = []
 
 #INGREDIENTS STACKS
-ingredientes = {"Cilantro":500, "Cebolla":500, "Salsa": 500, "Queso":500, "Guacamole":500, "Frijoles":500}
+ingredientes = {"Cilantro":500, "Cebolla":500, "Salsa":500, "Guacamole":500, "Frijoles":500}
+
+tortillas1 = 500
+tortillas2 = 500
+trotillas3 = 500
 
 #QUEUES FOR EACH TAQUERO, Q1: SMALL ORDER QUEUE, Q2: MEDIUM ORDER QUEUE, Q3: LARGE ORDER QUEUE
 Q1T1 = queue.Queue()
@@ -72,52 +76,59 @@ def Acomodar(MainQueue):
 
 #TAQUEROS: PROCESS 5 SMALL ORDERS, 3 MEDIUM ORDERS, 1 LARGE ORDER
 def Taquero1(Q1T1,Q2T1,Q3T1):
-    tortillas1 = 500
-    while True:
-        print("Taquero1")
-        if Q1T1.qsize() >= 5:
-            for i in range(5):
-                procesaOrden(Q1T1)
+    global tortillas1
+    if(tortillas > 0):
+        while True:
+            #print("Taquero1")
+            if Q1T1.qsize() >= 5:
+                for i in range(5):
+                    procesaOrden(Q1T1)
+                    tortillas1 -= 1
+            if Q2T1.qsize() >= 3:
+                for i in range(3):
+                    procesaOrden(Q2T1)
+                    tortillas1 -= 1
+            if Q3T1.empty() != False:
+                procesaOrden(Q3T1)
                 tortillas1 -= 1
-        if Q2T1.qsize() >= 3:
-            for i in range(3):
-                procesaOrden(Q2T1)
-                tortillas1 -= 1
-        if Q3T1.empty() != False:
-            procesaOrden(Q3T1)
-            tortillas1 -= 1
+    else:
+        thread.sleep(5)
 
 def Taquero2(Q1T2,Q2T2,Q3T2):
-    tortillas2 = 500
-    while True:
-        print("Taquero2")
-        if Q1T2.qsize() >= 5:
-            for i in range(5):
-                procesaOrden(Q1T2)
+    global tortillas2
+    if(tortillas2 > 0):
+        while True:
+            if Q1T2.qsize() >= 5:
+                for i in range(5):
+                    procesaOrden(Q1T2)
+                    tortillas2 -= 1
+            if Q2T2.qsize() >= 3:
+                for i in range(3):
+                    procesaOrden(Q2T2)
+                    tortillas2 -= 1
+            if Q3T2.empty() != False:
+                procesaOrden(Q3T2)
                 tortillas2 -= 1
-        if Q2T2.qsize() >= 3:
-            for i in range(3):
-                procesaOrden(Q2T2)
-                tortillas2 -= 1
-        if Q3T2.empty() != False:
-            procesaOrden(Q3T2)
-            tortillas2 -= 1
+    else:
+        thread.sleep(5)
 
 def Taquero3(Q1T3,Q2T3,Q3T3):
-    tortillas3 = 500
-    while True:
-        print("Taquero3")
-        if Q1T3.qsize() >= 5:
-            for i in range(5):
-                procesaOrden(Q1T3)
+    global tortillas3
+    if(tortillas2 > 0):
+        while True:
+            if Q1T3.qsize() >= 5:
+                for i in range(5):
+                    procesaOrden(Q1T3)
+                    tortillas3 -= 1
+            if Q2T3.qsize() >= 3:
+                for i in range(3):
+                    procesaOrden(Q2T3)
+                    tortillas3 -= 1
+            if Q3T3.empty() != False:
+                procesaOrden(Q3T3)
                 tortillas3 -= 1
-        if Q2T3.qsize() >= 3:
-            for i in range(3):
-                procesaOrden(Q2T3)
-                tortillas3 -= 1
-        if Q3T3.empty() != False:
-            procesaOrden(Q3T3)
-            tortillas3 -= 1
+    else:
+        thread.sleep(5)
 
 #GRABS ORDER FROM QUEUE, DECREASES INGREDIENTS, WAITS FOR TACOS TO BE READY, CALCULATES PROCESS DURATION
 def procesaOrden(QT):
@@ -128,8 +139,21 @@ def procesaOrden(QT):
     temtime = actual["quantity"] * .05
     time.sleep(temtime)
     end = t()
-    tiempo = (start - end)
+    tiempo = (end - start)
 
+
+def checkIngredients(ingredientes):
+    while True:
+        if ingredientes["Frijoles"] < 5:
+            time.sleep(5)
+        if ingredientes["Cebolla"] < 5:
+            time.sleep(5)
+        if ingredientes["Cilantro"] < 5:
+            time.sleep(5)
+        if ingredientes["Guacamole"] < 5:
+            time.sleep(5)
+        if ingredientes["Salsa"] < 5:
+            time.sleep(5)
 
 #BUSTRACT ONE OUT OF EACH INGREDIENT USED IN THE ORDER
 def restaIngredientes(orderI):
@@ -138,23 +162,58 @@ def restaIngredientes(orderI):
         ingredientes[i] -= 1
 
 #REFILL INGREDIENTS WHEN BELOW 150
-def rellenaIngredientes():
+def rellenaIngredientes(ingredientes):
     while True:
-        time.sleep(5)
         if (ingredientes["Cilantro"] <= 150):
             ingredientes["Cilantro"] += 100
         if (ingredientes["Cebolla"] <= 150):
             ingredientes["Cebolla"] += 100
         if (ingredientes["Salsa"] <= 150):
             ingredientes["Salsa"] += 100
-        if (ingredientes["Queso"] <= 150):
-            ingredientes["Queso"] += 100
         if (ingredientes["Guacamole"] <= 150):
             ingredientes["Guacamole"] += 100
+        if (ingredientes["Frijoles"] <= 150):
+            ingredientes["Frijoles"] += 100
+
+def Tortillera1():
+    global tortillas1
+    if tortillas1 <= 150:
+        time.sleep(5)
+        tortillas1 += 50
+        Tortillera1()
+    elif tortillas1 >= 150:
+        time.sleep(1)
+        tortillas1 += 1
+        Tortillera1()
+
+def Tortillera2():
+    global tortillas2
+    if tortillas2 <= 150:
+        time.sleep(5)
+        tortillas2 += 50
+        print(tortillas2)
+        Tortillera2()
+    elif tortillas2 >= 150:
+        time.sleep(1)
+        tortillas2 += 1
+        print(tortillas2)
+        Tortillera2()
+
+def Tortillera3():
+    global tortillas3
+    if tortillas3 <= 150:
+        time.sleep(5)
+        tortillas3 += 50
+        Tortillera3()
+    elif tortillas3 >= 150:
+        time.sleep(1)
+        tortillas3 += 1
+        Tortillera3()
 
 
 #START THE PROGRAM
 def startProgram():
+    global tortillas1,tortillas2,tortillas3
     ordenes = []
     threadTaquero1 = Thread(target=Taquero1, args=[Q1T1,Q2T1,Q3T1])
     threadTaquero1.start()
@@ -164,11 +223,20 @@ def startProgram():
     threadTaquero3.start()
     threadAcomodar = Thread(target = Acomodar, args=[ordenes])
     threadAcomodar.start()
+    threadRellena = Thread(target=rellenaIngredientes,args=[ingredientes])
+    threadRellena.start()
+    threadTortillera1 = Thread(target=Tortillera1, args=[tortillas1])
+    threadTortillera1.start()
+    threadTortillera2 = Thread(target=Tortillera2, args=[tortillas2])
+    threadTortillera2.start()
+    threadTortillera3 = Thread(target=Tortillera3, args=[tortillas3])
+    threadTortillera3.start()
+    threadIngredientes = Thread(target=checkIngredients, args=[ingredientes])
+    threadIngredientes.start()
 
     while True:
         ordenes.extend(SqsRead())
         #Acomodar(ordenes)
-        time.sleep(2)
         print(ingredientes)
 
 

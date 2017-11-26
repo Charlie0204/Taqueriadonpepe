@@ -9,10 +9,6 @@ listaWrite = []
 
 #INGREDIENTS STACKS
 ingredientes = {"Cilantro":500, "Cebolla":500, "Salsa": 500, "Queso":500, "Guacamole":500, "Frijoles":500}
-tortillas1 = 500
-tortillas2 = 500
-tortillas3 = 500
-order = SqsRead()
 
 #QUEUES FOR EACH TAQUERO, Q1: SMALL ORDER QUEUE, Q2: MEDIUM ORDER QUEUE, Q3: LARGE ORDER QUEUE
 Q1T1 = queue.Queue()
@@ -76,37 +72,52 @@ def Acomodar(MainQueue):
 
 #TAQUEROS: PROCESS 5 SMALL ORDERS, 3 MEDIUM ORDERS, 1 LARGE ORDER
 def Taquero1(Q1T1,Q2T1,Q3T1):
+    tortillas1 = 500
     while True:
-        for i in range(5):
-            procesaOrden(Q1T1)
-            #tortillas1 -= 1
-        for i in range(3):
-            procesaOrden(Q2T1)
-            #tortillas1 -= 1
-        procesaOrden(Q3T1)
-        #tortillas1 -= 1
+        print("Taquero1")
+        if Q1T1.qsize() >= 5:
+            for i in range(5):
+                procesaOrden(Q1T1)
+                tortillas1 -= 1
+        if Q2T1.qsize() >= 3:
+            for i in range(3):
+                procesaOrden(Q2T1)
+                tortillas1 -= 1
+        if Q3T1.empty() != False:
+            procesaOrden(Q3T1)
+            tortillas1 -= 1
 
 def Taquero2(Q1T2,Q2T2,Q3T2):
+    tortillas2 = 500
     while True:
-        for i in range(5):
-            procesaOrden(Q1T2)
-            #tortillas2 -= 1
-        for i in range(3):
-            procesaOrden(Q2T2)
-            #tortillas2 -= 1
-        procesaOrden(Q3T2)
-        #tortillas2 -= 1
+        print("Taquero2")
+        if Q1T2.qsize() >= 5:
+            for i in range(5):
+                procesaOrden(Q1T2)
+                tortillas2 -= 1
+        if Q2T2.qsize() >= 3:
+            for i in range(3):
+                procesaOrden(Q2T2)
+                tortillas2 -= 1
+        if Q3T2.empty() != False:
+            procesaOrden(Q3T2)
+            tortillas2 -= 1
 
 def Taquero3(Q1T3,Q2T3,Q3T3):
+    tortillas3 = 500
     while True:
-        for i in range(5):
-            procesaOrden(Q1T3)
-            #tortillas2 -= 1
-        for i in range(3):
-            procesaOrden(Q2T3)
-            #tortillas2 -= 1
-        procesaOrden(Q3T3)
-        #tortillas2 -= 1
+        print("Taquero3")
+        if Q1T3.qsize() >= 5:
+            for i in range(5):
+                procesaOrden(Q1T3)
+                tortillas3 -= 1
+        if Q2T3.qsize() >= 3:
+            for i in range(3):
+                procesaOrden(Q2T3)
+                tortillas3 -= 1
+        if Q3T3.empty() != False:
+            procesaOrden(Q3T3)
+            tortillas3 -= 1
 
 #GRABS ORDER FROM QUEUE, DECREASES INGREDIENTS, WAITS FOR TACOS TO BE READY, CALCULATES PROCESS DURATION
 def procesaOrden(QT):
@@ -119,8 +130,10 @@ def procesaOrden(QT):
     end = t()
     tiempo = (start - end)
 
+
 #BUSTRACT ONE OUT OF EACH INGREDIENT USED IN THE ORDER
 def restaIngredientes(orderI):
+    print("Restando ingredientes")
     for i in orderI["ingredients"]:
         ingredientes[i] -= 1
 
@@ -143,17 +156,21 @@ def rellenaIngredientes():
 #START THE PROGRAM
 def startProgram():
     ordenes = []
-
     threadTaquero1 = Thread(target=Taquero1, args=[Q1T1,Q2T1,Q3T1])
     threadTaquero1.start()
     threadTaquero2 = Thread(target=Taquero2, args=[Q1T2,Q2T2,Q3T2])
     threadTaquero2.start()
     threadTaquero3 = Thread(target=Taquero3, args=[Q1T3,Q2T3,Q3T3])
     threadTaquero3.start()
+    threadAcomodar = Thread(target = Acomodar, args=[ordenes])
+    threadAcomodar.start()
+
     while True:
         ordenes.extend(SqsRead())
-        Acomodar(ordenes)
+        #Acomodar(ordenes)
         time.sleep(2)
         print(ingredientes)
+
+
 
 startProgram()

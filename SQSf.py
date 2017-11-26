@@ -13,6 +13,15 @@ def SqsRead():
             recibos.append(json.loads(message["Body"]))
     return recibos
 
+def SqsWrite():
+    #respuesta = sqs.send_message(QueueUrl='https://sqs.us-east-1.amazonaws.com/292274580527/cc406_response1', MessageBody = mensaje)
+
+
+def SqsBorrar():
+    #for r in recibos:
+            #response = sqs.delete_message(QueueUrl='https://sqs.us-east-1.amazonaws.com/292274580527/cc406_team1', ReceiptHandle = r)
+
+
 
 #def SqsDel():
 #    for r in recibos:

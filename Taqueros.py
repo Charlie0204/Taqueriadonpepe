@@ -94,8 +94,7 @@ def Acomodar(MainQueue):
 
 #TAQUEROS: PROCESS 5 SMALL ORDERS, 3 MEDIUM ORDERS, 1 LARGE ORDER
 def Taquero1(Q1T1,Q2T1,Q3T1):
-    # global tortillas1
-    tortillas1 = 500
+    global tortillas1
     if(tortillas1 > 0):
         while True:
             #print("Taquero1")
@@ -114,7 +113,7 @@ def Taquero1(Q1T1,Q2T1,Q3T1):
         thread.sleep(5)
 
 def Taquero2(Q1T2,Q2T2,Q3T2):
-    # global tortillas2
+    global tortillas2
     tortillas2 = 500
     if(tortillas2 > 0):
         while True:
@@ -133,7 +132,7 @@ def Taquero2(Q1T2,Q2T2,Q3T2):
         thread.sleep(5)
 
 def Taquero3(Q1T3,Q2T3,Q3T3):
-    # global tortillas3
+    global tortillas3
     tortillas3 = 500
     if(tortillas3 > 0):
         while True:
@@ -197,36 +196,32 @@ def rellenaIngredientes(ingredientes):
         if (ingredientes["Frijoles"] <= 150):
             ingredientes["Frijoles"] += 100
 
-# def Tortillera1(tortillas1):
-#     if tortillas1 <= 150:
-#         time.sleep(5)
-#         tortillas1 += 50
-#         Tortillera1()
-#     elif tortillas1 >= 150:
-#         time.sleep(1)
-#         tortillas1 += 1
-#         Tortillera1(tortillas1)
-#
-# def Tortillera2(tortillas2):
-#     if tortillas2 <= 150:
-#         time.sleep(5)
-#         tortillas2 += 50
-#         Tortillera2()
-#     elif tortillas2 >= 150:
-#         time.sleep(1)
-#         tortillas2 += 1
-#         print(tortillas2)
-#         Tortillera2(tortillas2)
-#
-# def Tortillera3(tortillas3):
-#     if tortillas3 <= 150:
-#         time.sleep(5)
-#         tortillas3 += 50
-#         Tortillera3()
-#     elif tortillas3 >= 150:
-#         time.sleep(1)
-#         tortillas3 += 1
-#         Tortillera3(tortillas3)
+def Tortillera1(tortillas1):
+    while True:
+        if tortillas1 <= 150:
+            time.sleep(5)
+            tortillas1 += 50
+        elif tortillas1 >= 150:
+            time.sleep(1)
+            tortillas1 += 1
+
+def Tortillera2(tortillas2):
+    while True:
+        if tortillas2 <= 150:
+            time.sleep(5)
+            tortillas2 += 50
+        elif tortillas2 >= 150:
+            time.sleep(1)
+            tortillas2 += 1
+
+def Tortillera3(tortillas3):
+    while True:
+        if tortillas3 <= 150:
+            time.sleep(5)
+            tortillas3 += 50
+        elif tortillas3 >= 150:
+            time.sleep(1)
+            tortillas3 += 1
 
 def preparaRespuesta(order):
     respuesta = []
@@ -237,14 +232,14 @@ def preparaRespuesta(order):
 
     respuestaF = [
         {
-        "datetime": respuesta[0],
-        "request_id": "",
-        "orden": [
-            {"part_id": order["part_id"],
-            "type":order["type"],
-            "meat":order["meat"],
-            "quantity":order["quantity"],
-            "ingredients":order["ingredients"]
+        "\ndatetime": respuesta[0],
+        "\nrequest_id": "",
+        "\norden": [
+            {"\npart_id": order["part_id"],
+            "\ntype":order["type"],
+            "\nmeat":order["meat"],
+            "\nquantity":order["quantity"],
+            "\ningredients":order["ingredients"]
          }
         ],
         "answer":{
@@ -288,22 +283,17 @@ def startProgram():
     threadAcomodar.start()
     threadRellena = Thread(target=rellenaIngredientes,args=[ingredientes])
     threadRellena.start()
-    # threadTortillera1 = Thread(target=Tortillera1, args=[tortillas1])
-    # threadTortillera1.start()
-    # threadTortillera2 = Thread(target=Tortillera2, args=[tortillas2])
-    # threadTortillera2.start()
-    # threadTortillera3 = Thread(target=Tortillera3, args=[tortillas3])
-    # threadTortillera3.start()
+    threadTortillera1 = Thread(target=Tortillera1, args=[tortillas1])
+    threadTortillera1.start()
+    threadTortillera2 = Thread(target=Tortillera2, args=[tortillas2])
+    threadTortillera2.start()
+    threadTortillera3 = Thread(target=Tortillera3, args=[tortillas3])
+    threadTortillera3.start()
     threadIngredientes = Thread(target=checkIngredients, args=[ingredientes])
     threadIngredientes.start()
 
     while True:
         ordenes.extend(SqsRead())
-        #Acomodar(ordenes)
         print(ingredientes)
-
-
-
-
 
 startProgram()

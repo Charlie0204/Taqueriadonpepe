@@ -3,7 +3,7 @@ final project operative systems
 ## Getting Started
 To implement the code from this repo, you will need to download the files:
 ```
-- Graficas.py
+- Graphics2.py
 - Taqueros.py
 - Ingredientes.py
 - SQSf.py

@@ -159,7 +159,11 @@ def procesaOrden(QT):
     temtime = actual["quantity"] * .05
     time.sleep(temtime)
     actual["finProcesa"]= datetime.datetime.now()
-    print(preparaRespuesta(actual))
+    Respuestaend = preparaRespuesta(actual)
+    listaWrite.append(Respuestaend)
+    print(Respuestaend)
+    for answer in listaWrite:
+        SqsWrite(answer)
 
 
 

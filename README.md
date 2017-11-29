@@ -54,16 +54,19 @@ It is recommended to run this program through a LINUX build, it hasn't been test
 To run the program follow this simple instructions:
 ```
 1. Download the files from the "Getting Started" section of this readme.
-2. Run the SQSf.py file
+2. Run the Taquero.py file
 ```
 You can check the repository periodically to look for updates on this project
 
 ## Pseudocode
-
+```
+Pseudocode will go here
+```
 
 ## Flow Chart
-
-
+```
+Insert Flowchart here
+```
 ## Contributors
 * [Charlie0204](https://github.com/Charlie0204)
 * [PepeGonza](https://github.com/PepeGonza)

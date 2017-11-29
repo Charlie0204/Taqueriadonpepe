@@ -4,6 +4,7 @@ from time import time as t
 import datetime
 import queue
 from threading import Thread,Lock
+import json
 
 listaWrite = []
 
@@ -163,7 +164,8 @@ def procesaOrden(QT):
     listaWrite.append(Respuestaend)
     print(Respuestaend)
     for answer in listaWrite:
-        SqsWrite(answer)
+        respuestaenviada = json.dumps(answer)
+        SqsWrite(respuestaenviada)
 
 
 

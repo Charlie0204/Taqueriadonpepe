@@ -1,0 +1,45 @@
+listaWrite = List that contains what will be written on SQS
+ingredientes = List that contains the ingredients of a taco
+tortillas1 = tortillas for first taquero
+tortillas2 = tortillas for second taquero
+tortillas3 = tortillas for third taquero
+
+#Each taquero has three queues and a list that contains each of said queues
+
+def acomodar(): 
+    # makes 3 int variables called count
+    #Organizes the orders from SQS, does an operation of module %3
+    #If the result = 0 it goes to the first taquero
+    #If the result = 1 it goes to the second taquero
+    #If the result = 2 it goes to the third taquero
+    #The quantity of the suborder also determines in which queue it will go
+    #If there aare less than 10 tacos in the suborder it goes to the first queue
+    #If  there are less than 20 tacos in the suborder it goes to the second queue
+    #If there are more than 20 tacos in the suborder it goes to the third queue
+
+def Taquero():
+    #Each taquero process 5 small suborders, 3 medium suborders and 1 large
+
+def procesaOrden():
+    #The taquero processes the suborder and substracts the ingredients and tortillas to make the taco,
+    #after a suborder is made, the taquero rests for .5 seconds and adds the results on listaWrite to 
+    #send to SQS
+
+def checkIngredients():
+    #Whenever an ingredient has less than 5 units, it is completely refilled, but the thread will rest
+    #For 5 seconds
+
+def rellenaIngredientes():
+    #Whenever an ingredient has less than 150 units, it will be restocked by 100 units.
+
+def Tortillera:
+    #Each taquero has it's own tortillera, the tortilleras make 50 tortillas if there are less than 150
+    #than tortillas and will rest for 5 seconds, and if there are more than 150 tortillas, they will 
+    #make one tortilla and rest one second.
+
+def preparaRespuesta():
+    #Acomoda la respuesta para mandarse a SQS en un formato JSON
+
+def startProgram():
+    #Assigns threads to every function on the program, including the taqueros, the tortilleras, acomodar,
+    #rellenaIngredientes, and checkIngredients.       

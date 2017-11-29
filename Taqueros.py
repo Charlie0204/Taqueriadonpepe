@@ -6,7 +6,10 @@ import queue
 from threading import Thread,Lock
 import json
 
+from docutils.nodes import definition_list
+
 listaWrite = []
+delList = []
 
 #INGREDIENTS STACKS
 ingredientes = {"Cilantro":500, "Cebolla":500, "Salsa":500, "Guacamole":500, "Frijoles":500}
@@ -39,6 +42,7 @@ def Acomodar(MainQueue):
     while True:
         if(len(MainQueue) > 0):
             actual = MainQueue.pop(0)
+            delList.append(actual)
             for suborden in actual["orden"]:
                 suborden["inicioAcomoda"] = datetime.datetime.now()
                 if suborden["quantity"] < 10:
@@ -163,10 +167,12 @@ def procesaOrden(QT):
     Respuestaend = preparaRespuesta(actual)
     listaWrite.append(Respuestaend)
     print(Respuestaend)
-    for answer in listaWrite:
-        respuestaenviada = json.dumps(answer)
-        SqsWrite(respuestaenviada)
 
+
+def preparaEscribir(ListaEscribir):
+    for answer in ListaEscribir:
+        respuestaEnviar = json.loads(answer)
+        SqsWrite(respuestaEnviar)
 
 
 def checkIngredients(ingredientes):
@@ -228,6 +234,10 @@ def Tortillera3(tortillas3):
         elif tortillas3 >= 150:
             time.sleep(1)
             tortillas3 += 1
+
+def delSqs(delList):
+    while True:
+        SqsDel(definition_list)
 
 def preparaRespuesta(order):
     respuesta = []
@@ -297,6 +307,10 @@ def startProgram():
     threadTortillera3.start()
     threadIngredientes = Thread(target=checkIngredients, args=[ingredientes])
     threadIngredientes.start()
+    ThreadWrite = Thread(target = preparaEscribir, args = [listaWrite])
+    ThreadWrite.start()
+    #ThreadDel = Thread(Target = delSqs, args=[delList])
+    #ThreadDel.start()
 
     while True:
         ordenes.extend(SqsRead())

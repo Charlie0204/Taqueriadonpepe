@@ -15,7 +15,7 @@ def SqsRead():
 
 def SqsWrite(answer):
     sqs = boto3.client('sqs')
-    respuesta = sqs.send_message(QueueUrl='https://sqs.us-east-1.amazonaws.com/292274580527/cc406_response1', MessageBody = mensaje)
+    respuesta = sqs.send_message(QueueUrl='https://sqs.us-east-1.amazonaws.com/292274580527/cc406_response1', MessageBody = answer)
 
 
 #def SqsBorrar():

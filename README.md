@@ -56,20 +56,19 @@ To run the program follow this simple instructions:
 1. Download the files from the "Getting Started" section of this readme.
 2. Run the Taquero.py file
 ```
-You can check the repository periodically to look for updates on this project
+You can check the repository periodically to look for updates on this project.
 
 ## Pseudocode
-```
-Pseudocode will go here
-```
+To check the pseudocode of this project please follow this [link](https://github.com/Charlie0204/Taqueriadonpepe/blob/master/Pseudocode.txt).
 
 ## Flow Chart
-```
-Insert Flowchart here
-```
+
+![alt text](https://github.com/Charlie0204/Taqueriadonpepe/blob/master/TaqueriaFlowChart.png)
+
 ## Contributors
 * [Charlie0204](https://github.com/Charlie0204)
 * [PepeGonza](https://github.com/PepeGonza)
 * [alainmartinez](https://github.com/alainmartinez)
 
 ## Acknowledgement
+* LuisS96's [ProjectOS](https://github.com/LuisS96/ProjectOS) 
